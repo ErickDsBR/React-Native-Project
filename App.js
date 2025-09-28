@@ -33,17 +33,23 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#333",
   },
   produtos: {
-    backgroundColor: '#9d9d9d',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '15px',
-    height: '150px',
-    width: '100px',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: '100%',
+    gap: 10,
+    backgroundColor: '#222'
 
+  },
+  produto: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:'#fff',
+    width: '50%',
+    borderRadius: 15,
+    height: 220,
+    elevation: 5,
   }
 });
