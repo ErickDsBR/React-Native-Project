@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
   const produtos = [
@@ -9,14 +10,14 @@ export default function App() {
     },
     {
       id: 2,
-      nome: 'banana',
+      nome: "banana",
       valor: 50,
-
-    }
+    },
   ];
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}></View>
         <View style={styles.produtos}>
           {produtos.map((produto) => (
             <View key={produto.id} style={styles.produto}>
@@ -25,31 +26,42 @@ export default function App() {
             </View>
           ))}
         </View>
-      </View>
-    </View> 
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
     flex: 1,
     backgroundColor: "#333",
   },
+  header: {
+    justifyContent: "center",
+    alignContent: "center",
+    padding: "10px",
+    borderRadius: "15px",
+    elevation: 10,
+    backgroundColor: "#9d9d9d",
+    width: "85%",
+    height: "50px",
+  },
   produtos: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: '100%',
+    backgroundColor: "#222",
+    flexDirection: "row",
+    paddingTop: "10px",
+    flexWrap: "wrap",
+    width: "100%",
     gap: 10,
-    backgroundColor: '#222'
-
   },
   produto: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor:'#fff',
-    width: '50%',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    width: "50%",
     borderRadius: 15,
     height: 220,
     elevation: 5,
-  }
+  },
 });
