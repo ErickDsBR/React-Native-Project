@@ -4,7 +4,7 @@
 
 
 import React from "react";
-import { Modal, Pressable, Alert, StyleSheet, Text, View } from "react-native";
+import { Modal, Button, Alert, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
@@ -38,8 +38,19 @@ export default function App() {
             </View>
           ))}
         </View>
-        <View style={styles.botoes}></View>
+      <Button title="Abrir Modal" onPress={() => setModalVisible(true)} />
       </SafeAreaView>
+      <Modal style={styles.centeredView}
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Hello World!</Text>
+          <Button title="Fechar" onPress={() => setModalVisible(false)} />
+        </View>
+      </Modal>
     </SafeAreaProvider>
   );
 }
@@ -81,5 +92,15 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     height: 220,
     elevation: 5,
+  },
+  modalView: {
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    padding: 35,
+    height: 300,
+    width: 300,
+    margin: 20,
   },
 });
