@@ -38,20 +38,23 @@ export default function App() {
             </View>
           ))}
         </View>
-      <Button title="Abrir Modal" onPress={() => setModalVisible(true)} />
+        <Button title="Abrir Modal" onPress={() => setModalVisible(true)} />
       </SafeAreaView>
-      <Modal style={styles.centeredView}
+      <Modal
+        justifyContent="center"
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>Hello World!</Text>
-          <Button title="Fechar" onPress={() => setModalVisible(false)} />
-        </View>
+        <SafeAreaView style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Button title="Fechar" onPress={() => setModalVisible(false)} />
+          </View>
+        </SafeAreaView>
       </Modal>
-    </SafeAreaProvider>
+    </SafeAreaProvider >
   );
 }
 
@@ -78,29 +81,36 @@ const styles = StyleSheet.create({
   },
   produtos: {
     backgroundColor: "#9d9d9d",
+    justifyContent: "center",
+    flexWrap: "wrap 2, 1",
     flexDirection: "row",
     paddingTop: "10px",
-    flexWrap: "wrap",
     width: "100%",
-    gap: 10,
+    gap: 15,
   },
   produto: {
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
-    width: "50%",
+    width: "45%",
+    height: "80%",
     borderRadius: 15,
-    height: 220,
     elevation: 5,
   },
   modalView: {
-    backgroundColor: "white",
-    justifyContent: "center",
+    backgroundColor: "#f11f1f",
+    justifyContent: "center", 
     alignItems: "center",
     borderRadius: 20,
     padding: 35,
     height: 300,
     width: 300,
     margin: 20,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+
   },
 });
