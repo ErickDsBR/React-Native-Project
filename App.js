@@ -4,10 +4,18 @@
 
 
 import React from "react";
-import { TextInput, Modal, Button, Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, TextInput, Modal, Button, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
+  const adicionarProduto = () => {
+    //! lógica para adicionar produto
+    //!const adicionarProduto = produtos.append() => {};
+
+  };
+
+  const [Name, setName] = React.useState("");
+  const [value, setValue] = React.useState("");
   const [modalVisible, setModalVisible] = React.useState(false);
   const produtos = [
     {
@@ -22,7 +30,6 @@ export default function App() {
     },
   ];
 
-  //!const adicionarProduto = produtos.append() => {};
 
   return (
     <SafeAreaProvider>
@@ -53,13 +60,14 @@ export default function App() {
               style={styles.input}
               placeholder="Nome do Produto"
               keyboardType="default"
-            ></TextInput>
+            />
             <TextInput
               style={styles.input}
               placeholder="Valor do Produto"
               keyboardType="decimal-pad"
-            ></TextInput>
-            <Text style={styles.modalText}></Text>
+              onChangeText={(text) => setName(text)}
+            />
+            
             <Button title="Adicionar" onPress={() => setModalVisible(false)} />
           </View>
         </SafeAreaView>
@@ -71,8 +79,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    flex: 1,
     backgroundColor: "#000",
+    flex: 1,
   },
   header: {
     alignItems: "center",
@@ -136,7 +144,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "80%",
     height: 40,
-
   },
 
 });
