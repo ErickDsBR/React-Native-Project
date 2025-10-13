@@ -49,16 +49,20 @@ export default function App() {
       >
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalView}>
-            <TextInput 
-            styles={styles.input}
-            value={String}
-            placeholder="Nome do Produto"
-            keyboardType="product-name"           
+            <TextInput
+              style={styles.input}
+              placeholder="Nome do Produto"
+              keyboardType="default"
+            ></TextInput>
+            <TextInput
+              style={styles.input}
+              placeholder="Valor do Produto"
+              keyboardType="decimal-pad"
             ></TextInput>
             <Text style={styles.modalText}></Text>
             <Button title="Adicionar" onPress={() => setModalVisible(false)} />
           </View>
-        </SafeAreaView> 
+        </SafeAreaView>
       </Modal>
     </SafeAreaProvider >
   );
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: "#9d9d9d",
-    justifyContent: "center", 
+    justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
     elevation: 20,
@@ -121,8 +125,18 @@ const styles = StyleSheet.create({
 
   },
   input: {
-    
+    elevation: 15,
+    colortext: "#000",
+    backgroundColor: "#fff",
+    padding: 10,
+    borderBlockColor: "#000",
+    textAlign: "center",
+    marginBottom: 15,
+    borderWidth: 1,
+    borderRadius: 10,
+    width: "80%",
+    height: 40,
 
   },
-    
+
 });
