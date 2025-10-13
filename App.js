@@ -4,7 +4,7 @@
 
 
 import React from "react";
-import { Modal, Button, Alert, StyleSheet, Text, View } from "react-native";
+import { TextInput, Modal, Button, Alert, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
@@ -49,10 +49,16 @@ export default function App() {
       >
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Button title="Fechar" onPress={() => setModalVisible(false)} />
+            <TextInput 
+            styles={styles.input}
+            value={String}
+            placeholder="Nome do Produto"
+            keyboardType="product-name"           
+            ></TextInput>
+            <Text style={styles.modalText}></Text>
+            <Button title="Adicionar" onPress={() => setModalVisible(false)} />
           </View>
-        </SafeAreaView>
+        </SafeAreaView> 
       </Modal>
     </SafeAreaProvider >
   );
@@ -93,18 +99,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
     width: "45%",
-    height: "80%",
+    height: "85%",
     borderRadius: 15,
     elevation: 5,
   },
   modalView: {
-    backgroundColor: "#f11f1f",
+    backgroundColor: "#9d9d9d",
     justifyContent: "center", 
     alignItems: "center",
     borderRadius: 20,
+    elevation: 20,
     padding: 35,
-    height: 300,
-    width: 300,
+    height: "40%",
+    width: "90%",
     margin: 20,
   },
   modalContainer: {
@@ -113,4 +120,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
   },
+  input: {
+    
+
+  },
+    
 });
