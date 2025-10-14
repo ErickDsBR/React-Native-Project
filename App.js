@@ -3,7 +3,7 @@
 //* criar um pasta separar o codigo de funções e componentes um arquivo que guarda a lista como um bd e um para as funçoes e paginas do app com coisas relacionadas a interface e coisas a mais de um mercado!! 
 
 
-import React from "react";
+import React, {useState} from "react";
 import { Alert, TextInput, Modal, Button, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -11,11 +11,11 @@ export default function App() {
   const adicionarProduto = () => {
     //! lógica para adicionar produto
     //!const adicionarProduto = produtos.append() => {};
-
+      Alert.alert("Produto Adicionado com Sucesso ", {Name} );
   };
 
-  const [Name, setName] = React.useState("");
-  const [value, setValue] = React.useState("");
+  const [Name, setName] = useState("");
+  const [value, setValue] = useState("");
   const [modalVisible, setModalVisible] = React.useState(false);
   const produtos = [
     {
@@ -56,8 +56,11 @@ export default function App() {
       >
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalView}>
+            <Text style ={styles.teste} > {Name}</Text>
             <TextInput
               style={styles.input}
+              onChangeText={setName}
+              value={Name}
               placeholder="Nome do Produto"
               keyboardType="default"
             />
@@ -65,10 +68,10 @@ export default function App() {
               style={styles.input}
               placeholder="Valor do Produto"
               keyboardType="decimal-pad"
-              onChangeText={(text) => setName(text)}
+              onChangeText={setValue}
+              value={value}
             />
-            
-            <Button title="Adicionar" onPress={() => setModalVisible(false)} />
+            <Button title="Adicionar" onPress={(adicionarProduto) => setModalVisible(false)}/>
           </View>
         </SafeAreaView>
       </Modal>
@@ -145,5 +148,12 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 40,
   },
+  teste: {
+    colortext: "#000",
+    marginBottom: 15,
+    fontSize: 20,
+    fontWeight: "bold",
+
+    },
 
 });
