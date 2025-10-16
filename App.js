@@ -3,15 +3,15 @@
 //* criar um pasta separar o codigo de funções e componentes um arquivo que guarda a lista como um bd e um para as funçoes e paginas do app com coisas relacionadas a interface e coisas a mais de um mercado!! 
 
 
-import React, {useState} from "react";
-import { Alert, TextInput, Modal, Button, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { TextInput, Modal, Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
-  const adicionarProduto = () => {
+  const adicionarProduto = (idproduto) => {
     //! lógica para adicionar produto
-    //!const adicionarProduto = produtos.append() => {};
-      Alert.alert("Produto Adicionado com Sucesso ", {Name} );
+    //!const adicionarProduto = produtos.push() => {};
+
   };
 
   const [Name, setName] = useState("");
@@ -45,7 +45,7 @@ export default function App() {
             </View>
           ))}
         </View>
-        <Button title="Abrir Modal" onPress={() => setModalVisible(true)} />
+        <Button title="Adicionar Produto" onPress={() => setModalVisible(true)} />
       </SafeAreaView>
       <Modal
         justifyContent="center"
@@ -56,7 +56,7 @@ export default function App() {
       >
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalView}>
-            <Text style ={styles.teste} > {Name}</Text>
+            <Text style={styles.teste} > {Name}</Text>
             <TextInput
               style={styles.input}
               onChangeText={setName}
@@ -66,12 +66,18 @@ export default function App() {
             />
             <TextInput
               style={styles.input}
+              onChange={setValue}
+              value={value}
               placeholder="Valor do Produto"
               keyboardType="decimal-pad"
-              onChangeText={setValue}
-              value={value}
+
             />
-            <Button title="Adicionar" onPress={(adicionarProduto) => setModalVisible(false)}/>
+            <TouchableOpacity style = {styles.botao} onPress={() => setModalVisible(false)}>
+              <Text>Fechar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style = {styles.botao} onPress={adicionarProduto}>
+              <Text>Adicionar</Text>
+            </TouchableOpacity>
           </View>
         </SafeAreaView>
       </Modal>
@@ -154,6 +160,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
 
-    },
+  },
+  botao: {
+    backgroundColor: "#fff",
+    alignItems: "center",
+    width: "50%",
+    height: 40,
+    elevation: 10,
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+
+  }
 
 });
