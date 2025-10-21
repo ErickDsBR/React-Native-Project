@@ -8,12 +8,19 @@ import { TextInput, Modal, Button, StyleSheet, Text, View, TouchableOpacity } fr
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
-  const adicionarProduto = (idproduto) => {
-    //! lógica para adicionar produto
-    //!const adicionarProduto = produtos.push() => {};
+  const adicionarProduto = (produtos) => {
+    const novoProduto = {
+      id: produtos.length + 1,
+      nome: Name,
+      valor: value,
+    };
+    setProdutosList([adicionarProduto, setProdutosList])
+    produtosList(setProdutosList.push(novoProduto));
 
   };
 
+
+  const [produtosList, setProdutosList] = useState([]);
   const [Name, setName] = useState("");
   const [value, setValue] = useState("");
   const [modalVisible, setModalVisible] = React.useState(false);
