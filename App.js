@@ -2,41 +2,38 @@
 
 //* criar um pasta separar o codigo de funções e componentes um arquivo que guarda a lista como um bd e um para as funçoes e paginas do app com coisas relacionadas a interface e coisas a mais de um mercado!! 
 
-
 import React, { useState } from "react";
 import { TextInput, Modal, Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+//!!.............................................
 
 export default function App() {
-  const adicionarProduto = (produtos) => {
-    const novoProduto = {
-      id: produtos.length + 1,
-      nome: Name,
-      valor: value,
-    };
-    setProdutosList([adicionarProduto, setProdutosList])
-    produtosList(setProdutosList.push(novoProduto));
-
-  };
-
-
-  const [produtosList, setProdutosList] = useState([]);
   const [Name, setName] = useState("");
   const [value, setValue] = useState("");
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const produtos = [
+  const [produtos, setProdutos] = useState([
     {
       id: 1,
       nome: "maça",
-      valor: 2.5,
+      valor: 2.50,
     },
     {
       id: 2,
       nome: "banana",
       valor: 50,
     },
-  ];
+  ]);
+  
+  const [modalVisible, setModalVisible] = React.useState(false);
 
+  const adicionarProduto = () => {
+    const novoProduto = {
+      id: produtos.length + 1,
+      nome: Name,
+      valor: parseFloat(value),
+    }
+    setProdutos([...produtos, novoProduto]);
+    setModalVisible(false);
+  };
 
   return (
     <SafeAreaProvider>
@@ -52,9 +49,9 @@ export default function App() {
             </View>
           ))}
         </View>
-        <Button title="Adicionar Produto" onPress={() => setModalVisible(true)} />
+        <Button title="Adicionar Produto" onPress={() => setModalVisible(true)}/>
       </SafeAreaView>
-      <Modal
+      <Modal 
         justifyContent="center"
         animationType="slide"
         transparent={true}
@@ -63,26 +60,25 @@ export default function App() {
       >
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalView}>
-            <Text style={styles.teste} > {Name}</Text>
+            <Text style={styles.teste} >{Name}</Text>
             <TextInput
               style={styles.input}
               onChangeText={setName}
               value={Name}
-              placeholder="Nome do Produto"
-              keyboardType="default"
+              placeholder="Nome do Produto" 
             />
             <TextInput
               style={styles.input}
-              onChange={setValue}
+              onChangeText={setValue}
               value={value}
               placeholder="Valor do Produto"
-              keyboardType="decimal-pad"
+              keyboardType="numeric"
 
             />
-            <TouchableOpacity style = {styles.botao} onPress={() => setModalVisible(false)}>
+            <TouchableOpacity style={styles.botao} onPress={() => setModalVisible(false)}>
               <Text>Fechar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style = {styles.botao} onPress={adicionarProduto}>
+            <TouchableOpacity style={styles.botao} onPress={adicionarProduto}>
               <Text>Adicionar</Text>
             </TouchableOpacity>
           </View>
@@ -116,18 +112,18 @@ const styles = StyleSheet.create({
   produtos: {
     backgroundColor: "#9d9d9d",
     justifyContent: "center",
-    flexWrap: "wrap 2, 1",
+    flexWrap: "wrap",
     flexDirection: "row",
     paddingTop: "10px",
     width: "100%",
-    gap: 15,
+    gap: '1%',
   },
   produto: {
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
-    width: "45%",
-    height: "85%",
+    width: '48%',
+    height: 300,
     borderRadius: 15,
     elevation: 5,
   },
@@ -138,8 +134,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 20,
     padding: 35,
-    height: "40%",
-    width: "90%",
+    height: 300,
+    width: 350,
     margin: 20,
   },
   modalContainer: {
