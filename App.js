@@ -13,19 +13,21 @@ export default function App() {
   const [produtos, setProdutos] = useState([
     {
       id: 1,
+      img: "",
       nome: "maça",
       valor: 2.50,
       categoria: "frutas",
     },
     {
       id: 2,
-      categoria: "frutas",
       img: "🍌",
+      categoria: "frutas",
       nome: "banana",
       valor: 50,
     },
     {
       id: 3,
+      img: "",
       nome: "Café",
       valor: 150.75,
       categoria: "Cafe em po",
@@ -33,9 +35,13 @@ export default function App() {
   ]);
   const [cart, setcart] = useState([
     {
+      id: 1,
+      img: "",
+      nome: "maça",
+      valor: 2.50,
+      categoria: "frutas",
 
-    }
-
+    },
 
   ]);
 
@@ -51,11 +57,23 @@ export default function App() {
     setProdutos([...produtos, novoProduto]);
     setModalVisible(false);
   };
-  const adicionarAoCarrinho = (produtos) => {
-    setcart([...cart, produto]);
+  const adicionarAoCarrinho = (item) => {
+    // Função para adicionar produtos ao carrinho (a ser implementada)
+    const novositens = {
+      id: Date.now(),
+      nome: item.nome,
+      valor: item.valor,
+    };
+    console.log("adicionado", novositens);
+    setcart([...cart, novositens]);
   };
   const filterarProdutos = {
     // Função para filtrar produtos (a ser implementada)
+
+  };
+  const removerDoCarrinho = {
+    // Função para remover produtos do carrinho (a ser implementada)
+
 
   };
 
@@ -74,11 +92,10 @@ export default function App() {
                 </View>
                 <Text>{produto.nome}</Text>
                 <Text>R$ {produto.valor.toFixed(2)}</Text>
-                <TouchableOpacity style={styles.addcart} onPress={() => adicionarAoCarrinho()}>
+                <TouchableOpacity style={styles.addcart} onPress={() => adicionarAoCarrinho(produtos)}>
                   <Text>Adicionar ao Carrinho</Text>
                 </TouchableOpacity>
               </View>
-
             ))}
           </View>
         </ScrollView>
@@ -100,7 +117,6 @@ export default function App() {
       >
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalView}>
-            <Text style={styles.teste} >{Name}</Text>
             <TextInput
               style={styles.input}
               onChangeText={setName}
@@ -136,27 +152,28 @@ export default function App() {
               <View style={styles.headercart}>
                 <Text style={styles.cartheader} >Carrinho</Text>
               </View>
-              <View style={styles.cart_produtos} >
-                {cart.map((cart_products) => (
-                  <View key={cart.id}>
-                    <Text>{cart_products.nome}</Text>
-                    <Text>R$ {cart_products.valor}</Text>
-                    <TouchableOpacity style={styles.remove_cart}>
-                      <Text>Remover</Text>
-                    </TouchableOpacity>
-                  </View>
-                ))}
+              <ScrollView style={styles.scrollView}>
+                <View style={styles.cart_products} >
+                  {cart.map((cart_products) => (
+                    <View key={cart.id} style={styles.cart_produtos}>
+                      <Text>{cart_products.nome}</Text>
+                      <Text>R$ {cart_products.valor}</Text>
+                      <TouchableOpacity style={styles.remove_cart}>
+                        <Text>Remover</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </View>
+              </ScrollView>
+              <View style={styles.close_cart}>
+                <TouchableOpacity style={styles.botao} onPress={() => setCarrinho(false)}>
+                  <Text>Fechar</Text>
+                </TouchableOpacity>
               </View>
-            <View style={styles.close_cart}>
-              <TouchableOpacity style={styles.botao} onPress={() => setCarrinho(false)}>
-                <Text>Fechar</Text>
-              </TouchableOpacity>
             </View>
-          </View>
-      </SafeAreaView>
-    </Modal>
+          </SafeAreaView>
+        </Modal>
       </SafeAreaView >
-
     </SafeAreaProvider >
   );
 }
@@ -303,6 +320,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
   },
+  cart_products: {
+    justifyContent: "center",
+    alignItems: "center",
 
+  },
+  cart_produtos: {
+    backgroundColor: "#9d9d9d",
+    width: "95%",
+    borderRadius: 15,
+    height: 70,
+    marginBottom: 20,
+
+  },
 
 });
