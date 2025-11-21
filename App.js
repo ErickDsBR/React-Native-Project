@@ -3,7 +3,7 @@
 //* criar um pasta separar o codigo de funções e componentes um arquivo que guarda a lista como um bd e um para as funçoes e paginas do app com coisas relacionadas a interface e coisas a mais de um mercado!! 
 
 import React, { useState } from "react";
-import { TextInput, Modal, Button, StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { TextInput, Modal, StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 //!!.............................................
 
@@ -51,6 +51,13 @@ export default function App() {
     setProdutos([...produtos, novoProduto]);
     setModalVisible(false);
   };
+  const adicionarAoCarrinho = (produtos) => {
+    setcart([...cart, produto]);
+  };
+  const filterarProdutos = {
+    // Função para filtrar produtos (a ser implementada)
+
+  };
 
   return (
     <SafeAreaProvider>
@@ -67,7 +74,7 @@ export default function App() {
                 </View>
                 <Text>{produto.nome}</Text>
                 <Text>R$ {produto.valor.toFixed(2)}</Text>
-                <TouchableOpacity style={styles.addcart} onPress={() => { }}>
+                <TouchableOpacity style={styles.addcart} onPress={() => adicionarAoCarrinho()}>
                   <Text>Adicionar ao Carrinho</Text>
                 </TouchableOpacity>
               </View>
@@ -124,16 +131,31 @@ export default function App() {
           visible={carrinho}
           onRequestClose={() => setCarrinho(false)}
         >
-          <SafeAreaView style={styles.modalContainer}>
+          <SafeAreaView style={styles.modalcartContainer}>
             <View style={styles.cartView}>
-              <Text style={styles.cartheader} >Carrinho</Text>
+              <View style={styles.headercart}>
+                <Text style={styles.cartheader} >Carrinho</Text>
+              </View>
+              <View style={styles.cart_produtos} >
+                {cart.map((cart_products) => (
+                  <View key={cart.id}>
+                    <Text>{cart_products.nome}</Text>
+                    <Text>R$ {cart_products.valor}</Text>
+                    <TouchableOpacity style={styles.remove_cart}>
+                      <Text>Remover</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            <View style={styles.close_cart}>
               <TouchableOpacity style={styles.botao} onPress={() => setCarrinho(false)}>
                 <Text>Fechar</Text>
               </TouchableOpacity>
             </View>
-          </SafeAreaView>
-        </Modal>
+          </View>
       </SafeAreaView>
+    </Modal>
+      </SafeAreaView >
 
     </SafeAreaProvider >
   );
@@ -262,8 +284,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#1fdfb6ff",
     alignItems: "center",
   },
-
-
+  addcart: {
+    backgroundColor: "#00e1ffff",
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  modalcartContainer: {
+    flex: 1,
+  },
+  headercart: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+  cartheader: {
+    fontSize: 25,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
 
 
 });
