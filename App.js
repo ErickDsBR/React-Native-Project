@@ -1,122 +1,175 @@
-//! ideia de usar um modal para adicionar produtos assim podendo criar uma tela acima da principal com inputs com as informações do produto como nome, valor, etc 
-
-//* criar um pasta separar o codigo de funções e componentes um arquivo que guarda a lista como um bd e um para as funçoes e paginas do app com coisas relacionadas a interface e coisas a mais de um mercado!! 
-
 import React, { useState } from "react";
 import { TextInput, Modal, StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-//!!.............................................
 
 export default function App() {
   const [Name, setName] = useState("");
   const [value, setValue] = useState("");
+
   const [produtos, setProdutos] = useState([
-    {
-      id: 1,
-      img: "",
-      nome: "maça",
-      valor: 2.50,
-      categoria: "frutas",
-    },
-    {
-      id: 2,
-      img: "🍌",
-      categoria: "frutas",
-      nome: "banana",
-      valor: 50,
-    },
-    {
-      id: 3,
-      img: "",
-      nome: "Café",
-      valor: 150.75,
-      categoria: "Cafe em po",
-    }
-  ]);
-  const [cart, setcart] = useState([
-    {
-      id: 1,
-      img: "",
-      nome: "maça",
-      valor: 2.50,
-      categoria: "frutas",
-
-    },
-
+    { id: 1, img: "🍎", nome: "Maçã", valor: 2.50, categoria: "frutas" },
+    { id: 2, img: "🍌", nome: "Banana", valor: 5.00, categoria: "frutas" },
+    { id: 3, img: "☕", nome: "Café", valor: 15.75, categoria: "bebidas" },
+    { id: 4, img: "🥛", nome: "Leite", valor: 4.50, categoria: "laticinios" },
+    { id: 5, img: "🥩", nome: "Carne", valor: 35.00, categoria: "acougue" },
+    { id: 6, img: "🍫", nome: "Chocolate", valor: 8.00, categoria: "doces" }
   ]);
 
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [cart, setcart] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   const [carrinho, setCarrinho] = useState(false);
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const [searchText, setSearchText] = useState("");
+
+  const totalCarrinho = cart.reduce((acc, item) => acc + (item.valor * item.quantity), 0);
+
+  const produtosFiltrados = produtos.filter((produto) => {
+    const textoLimpo = searchText.toLowerCase();
+    return produto.nome.toLowerCase().includes(textoLimpo) ||
+      produto.categoria.toLowerCase().includes(textoLimpo);
+  });
 
   const adicionarProduto = () => {
     const novoProduto = {
-      id: produtos.length + 1,
+      id: Date.now(),
+      img: "📦",
       nome: Name,
-      valor: parseFloat(value),
+      valor: parseFloat(value) || 0,
+      categoria: "Outros"
     }
     setProdutos([...produtos, novoProduto]);
     setModalVisible(false);
+    setName("");
+    setValue("");
   };
-  const adicionarAoCarrinho = (item) => {
-    // Função para adicionar produtos ao carrinho (a ser implementada)
-    const novositens = {
-      id: Date.now(),
-      nome: item.nome,
-      valor: item.valor,
-    };
-    console.log("adicionado", novositens);
-    setcart([...cart, novositens]);
+
+  const adicionarAoCarrinho = (itemClicado) => {
+    const itemExistente = cart.find(item => item.id === itemClicado.id);
+
+    if (itemExistente) {
+      const novoCarrinho = cart.map(item =>
+        item.id === itemClicado.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+      setcart(novoCarrinho);
+    } else {
+      const novoItem = {
+        ...itemClicado,
+        quantity: 1
+      };
+      setcart([...cart, novoItem]);
+    }
   };
-  const filterarProdutos = {
-    // Função para filtrar produtos (a ser implementada)
 
-  };
-  const removerDoCarrinho = {
-    // Função para remover produtos do carrinho (a ser implementada)
-
-
+  const removerDoCarrinho = (idParaRemover) => {
+    const novaLista = cart.filter(item => item.id !== idParaRemover);
+    setcart(novaLista);
   };
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+
         <View style={styles.header}>
-          <TextInput style={styles.headersearch} placeholder="Pesquisar Produto" />
+          <TouchableOpacity
+            style={styles.headersearchArea}
+            onPress={() => setSearchModalVisible(true)}
+          >
+            <Text style={styles.placeholderText}>🔍 Buscar por Nome ou Categoria...</Text>
+          </TouchableOpacity>
         </View>
+
         <ScrollView style={styles.scrollView}>
           <View style={styles.produtos}>
             {produtos.map((produto) => (
               <View key={produto.id} style={styles.produto}>
                 <View style={styles.imgContainer}>
-                  <Text style={styles.emoji} >{produto.img}</Text>
+                  <Text style={styles.emoji}>{produto.img}</Text>
                 </View>
-                <Text>{produto.nome}</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{produto.nome}</Text>
+                <Text style={{ fontSize: 12, color: 'gray' }}>{produto.categoria}</Text>
                 <Text>R$ {produto.valor.toFixed(2)}</Text>
-                <TouchableOpacity style={styles.addcart} onPress={() => adicionarAoCarrinho(produtos)}>
-                  <Text>Adicionar ao Carrinho</Text>
+
+                <TouchableOpacity style={styles.addcart} onPress={() => adicionarAoCarrinho(produto)}>
+                  <Text style={{ fontWeight: 'bold' }}>Adicionar</Text>
                 </TouchableOpacity>
               </View>
             ))}
           </View>
         </ScrollView>
+
         <View style={styles.navgation}>
-          <TouchableOpacity style={styles.navgation_button} title="Adicionar Produto" onPress={() => setModalVisible(true)}>
-            <Text>🏬</Text>
+          <TouchableOpacity style={styles.navgation_button} onPress={() => setModalVisible(true)}>
+            <Text style={{ fontSize: 20 }}>➕ Produto</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navgation_button} title="Adicionar Produto" onPress={() => setCarrinho(true)}>
-            <Text>🛒</Text>
+
+          <TouchableOpacity style={styles.navgation_button} onPress={() => setCarrinho(true)}>
+            <Text style={{ fontSize: 20 }}>🛒 ({cart.reduce((acc, item) => acc + item.quantity, 0)})</Text>
           </TouchableOpacity>
         </View>
+
       </SafeAreaView>
+
       <Modal
-        justifyContent="center"
+        animationType="fade"
+        visible={searchModalVisible}
+        onRequestClose={() => setSearchModalVisible(false)}
+      >
+        <SafeAreaView style={styles.modalSearchContainer}>
+          <View style={styles.searchHeader}>
+            <TouchableOpacity onPress={() => setSearchModalVisible(false)}>
+              <Text style={{ fontSize: 30, marginRight: 10 }}>⬅️</Text>
+            </TouchableOpacity>
+
+            <TextInput
+              style={styles.searchInputReal}
+              placeholder="Ex: Banana ou Frutas"
+              value={searchText}
+              onChangeText={setSearchText}
+              autoFocus={true}
+            />
+          </View>
+
+          <View style={styles.searchResults}>
+            <ScrollView>
+              {produtosFiltrados.map((produto) => (
+                <View key={produto.id} style={styles.searchItem}>
+                  <Text style={{ fontSize: 30 }}>{produto.img}</Text>
+                  <View style={{ flex: 1, marginLeft: 15 }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{produto.nome}</Text>
+                    <Text style={{ color: 'gray', fontStyle: 'italic' }}>{produto.categoria}</Text>
+                    <Text style={{ fontWeight: 'bold', color: '#1fdfb6' }}>R$ {produto.valor.toFixed(2)}</Text>
+                  </View>
+
+                  <TouchableOpacity
+                    style={styles.btnAddSearch}
+                    onPress={() => adicionarAoCarrinho(produto)}
+                  >
+                    <Text style={{ fontWeight: 'bold' }}>Comprar</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+
+              {produtosFiltrados.length === 0 && searchText !== "" && (
+                <Text style={{ textAlign: 'center', marginTop: 20, fontSize: 16 }}>
+                  Nenhum produto encontrado.
+                </Text>
+              )}
+            </ScrollView>
+          </View>
+        </SafeAreaView>
+      </Modal>
+
+      <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <SafeAreaView style={styles.modalContainer}>
+        <View style={styles.modalContainer}>
           <View style={styles.modalView}>
+            <Text style={styles.teste}>Novo Produto</Text>
             <TextInput
               style={styles.input}
               onChangeText={setName}
@@ -127,211 +180,298 @@ export default function App() {
               style={styles.input}
               onChangeText={setValue}
               value={value}
-              placeholder="Valor do Produto"
+              placeholder="Valor"
               keyboardType="numeric"
-
             />
-            <TouchableOpacity style={styles.botao} onPress={() => setModalVisible(false)}>
-              <Text>Fechar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.botao} onPress={adicionarProduto}>
-              <Text>Adicionar</Text>
-            </TouchableOpacity>
+
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <TouchableOpacity style={[styles.botao, { backgroundColor: '#ff6b6b' }]} onPress={() => setModalVisible(false)}>
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.botao, { backgroundColor: '#1fdfb6' }]} onPress={adicionarProduto}>
+                <Text style={{ fontWeight: 'bold' }}>Salvar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        visible={carrinho}
+        onRequestClose={() => setCarrinho(false)}
+      >
+        <SafeAreaView style={styles.modalcartContainer}>
+          <View style={styles.cartView}>
+            <View style={styles.headercart}>
+              <Text style={styles.cartheader}>Seu Carrinho</Text>
+            </View>
+            <View style={styles.cart_products_container}>
+              <ScrollView contentContainerStyle={{ alignItems: 'center', paddingBottom: 20 }}>
+                {cart.length === 0 ? (
+                  <Text style={{ marginTop: 50, fontSize: 18, color: '#666' }}>O carrinho está vazio 🛒</Text>
+                ) : (
+                  cart.map((cart_products) => (
+                    <View key={cart_products.id} style={styles.cart_item}>
+                      <Text style={styles.emoji_cart}>{cart_products.img}</Text>
+                      <View style={{ flex: 1, marginLeft: 10 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#1fdfb6' }}>
+                            {cart_products.quantity}x
+                          </Text>
+                          <Text style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 5 }}>
+                            {cart_products.nome}
+                          </Text>
+                        </View>
+                        <Text style={{ fontSize: 14, color: '#333' }}>
+                          Total: R$ {(cart_products.valor * cart_products.quantity).toFixed(2)}
+                        </Text>
+                      </View>
+                      <TouchableOpacity style={styles.remove_cart} onPress={() => removerDoCarrinho(cart_products.id)}>
+                        <Text style={{ color: 'white', fontSize: 12 }}>Remover</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ))
+                )}
+              </ScrollView>
+            </View>
+            <View style={styles.footer_cart}>
+              <View style={styles.total_container}>
+                <Text style={styles.total_text}>Total a pagar:</Text>
+                <Text style={styles.total_valor}>R$ {totalCarrinho.toFixed(2)}</Text>
+              </View>
+              <TouchableOpacity style={styles.btn_fechar_cart} onPress={() => setCarrinho(false)}>
+                <Text style={styles.text_cart_btn}>Fechar Carrinho</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </SafeAreaView>
       </Modal>
-      <SafeAreaView style={styles.modalcart}>
-        <Modal
-          justifyContent="center"
-          animationType="slide"
-          visible={carrinho}
-          onRequestClose={() => setCarrinho(false)}
-        >
-          <SafeAreaView style={styles.modalcartContainer}>
-            <View style={styles.cartView}>
-              <View style={styles.headercart}>
-                <Text style={styles.cartheader} >Carrinho</Text>
-              </View>
-              <ScrollView style={styles.scrollView}>
-                <View style={styles.cart_products} >
-                  {cart.map((cart_products) => (
-                    <View key={cart.id} style={styles.cart_produtos}>
-                      <Text>{cart_products.nome}</Text>
-                      <Text>R$ {cart_products.valor}</Text>
-                      <TouchableOpacity style={styles.remove_cart}>
-                        <Text>Remover</Text>
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                </View>
-              </ScrollView>
-              <View style={styles.close_cart}>
-                <TouchableOpacity style={styles.botao} onPress={() => setCarrinho(false)}>
-                  <Text>Fechar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </SafeAreaView>
-        </Modal>
-      </SafeAreaView >
-    </SafeAreaProvider >
+
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#9d9d9d",
+    backgroundColor: "#e0e0e0",
     alignItems: "center",
     flex: 1,
   },
   header: {
     width: "100%",
-    height: "50px",
-  },
-  headersearch: {
-    backgroundColor: "#9d9d9d",
-    borderRadius: 15,
     padding: 10,
-    textAlign: "center",
-    fontSize: 15,
-    fontWeight: "bold",
+    backgroundColor: "#e0e0e0",
+  },
+  headersearchArea: {
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    padding: 12,
     width: "100%",
-    height: "50px",
+    elevation: 2,
+  },
+  placeholderText: {
+    color: '#999',
+    fontWeight: 'bold'
   },
   produtos: {
-    marginTop: 10,
-    elevation: 10,
-    padding: "10px",
-    backgroundColor: "#9d9d9d",
-    justifyContent: "center",
-    flexWrap: "wrap",
+    padding: 10,
     flexDirection: "row",
-    width: "100%",
-    gap: '1%',
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   produto: {
-    elevation: 10,
-    marginTop: 5,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "#fff",
     width: '48%',
-    height: 300,
+    height: 260,
     borderRadius: 15,
-    elevation: 5,
+    elevation: 3,
+    marginBottom: 15,
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
   },
   imgContainer: {
+    height: 100,
     justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    height: 150,
   },
   emoji: {
-    fontSize: 80,
-    marginBottom: 100,
+    fontSize: 60,
   },
   scrollView: {
     width: "100%",
-    marginBottom: 10,
-  },
-  modalView: {
-    backgroundColor: "#9d9d9d",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-    elevation: 20,
-    padding: 35,
-    height: 300,
-    width: 350,
-    margin: 20,
+    flex: 1,
   },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalView: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 25,
+    alignItems: "center",
+    elevation: 5,
+    width: '85%',
   },
   input: {
-    elevation: 15,
-    colortext: "#000",
-    backgroundColor: "#fff",
+    backgroundColor: "#f0f0f0",
     padding: 10,
-    borderBlockColor: "#000",
     textAlign: "center",
     marginBottom: 15,
-    borderWidth: 1,
     borderRadius: 10,
-    width: "80%",
-    height: 40,
+    width: "100%",
+    height: 50,
   },
   teste: {
-    colortext: "#000",
-    marginBottom: 15,
     fontSize: 20,
     fontWeight: "bold",
-
+    marginBottom: 20,
   },
   botao: {
-    backgroundColor: "#fff",
-    alignItems: "center",
-    width: "50%",
-    height: 40,
-    elevation: 10,
     padding: 10,
     borderRadius: 10,
-    marginTop: 10,
-
+    width: 100,
+    alignItems: 'center',
+    elevation: 2
   },
   navgation: {
-    backgroundColor: "#9d9d9d",
-    padding: 10,
-    borderRadius: 15,
-    elevation: 10,
-    justifyContent: "space-around",
+    backgroundColor: "#fff",
     flexDirection: "row",
+    justifyContent: "space-around",
     width: "100%",
+    paddingVertical: 10,
+    elevation: 10,
   },
   navgation_button: {
-    width: 120,
-    borderRadius: 15,
-    elevation: 10,
+    backgroundColor: "#f0f0f0",
     padding: 10,
-    marginBottom: 10,
-    justifyContent: "space-evenly",
-    backgroundColor: "#1fdfb6ff",
+    borderRadius: 10,
+    width: '45%',
     alignItems: "center",
   },
   addcart: {
-    backgroundColor: "#00e1ffff",
-    padding: 10,
+    backgroundColor: "#81ecec",
+    padding: 8,
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
+  },
+  modalSearchContainer: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  searchHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 15,
+    elevation: 3,
+  },
+  searchInputReal: {
+    flex: 1,
+    backgroundColor: '#f0f0f0',
     borderRadius: 10,
-    marginTop: 10,
+    padding: 10,
+    fontSize: 16,
+  },
+  searchResults: {
+    flex: 1,
+    padding: 10,
+  },
+  searchItem: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 10,
+    alignItems: 'center',
+    elevation: 2,
+  },
+  btnAddSearch: {
+    backgroundColor: "#81ecec",
+    padding: 10,
+    borderRadius: 8,
   },
   modalcartContainer: {
     flex: 1,
+    backgroundColor: '#fff',
+  },
+  cartView: {
+    flex: 1,
+    backgroundColor: "#fff",
+    width: "100%",
   },
   headercart: {
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
   cartheader: {
-    fontSize: 25,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
   },
-  cart_products: {
-    justifyContent: "center",
+  cart_products_container: {
+    flex: 1,
+    width: "100%",
+    paddingTop: 10,
+  },
+  cart_item: {
+    backgroundColor: "#f9f9f9",
+    width: "90%",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    elevation: 1,
+    borderWidth: 1,
+    borderColor: '#eee'
+  },
+  emoji_cart: {
+    fontSize: 25,
+  },
+  remove_cart: {
+    backgroundColor: '#ff7675',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+  },
+  footer_cart: {
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    backgroundColor: '#fff',
+  },
+  total_container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  total_text: {
+    fontSize: 18,
+    color: '#666',
+  },
+  total_valor: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1fdfb6',
+  },
+  btn_fechar_cart: {
+    backgroundColor: "#ff4444",
+    padding: 15,
+    borderRadius: 10,
     alignItems: "center",
-
   },
-  cart_produtos: {
-    backgroundColor: "#9d9d9d",
-    width: "95%",
-    borderRadius: 15,
-    height: 70,
-    marginBottom: 20,
-
+  text_cart_btn: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
   },
-
 });
